@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 
 
 
-
 const createAuthor = async function (req, res) {
   try {
     let title = req.body.title
@@ -114,29 +113,17 @@ const loginAuthor = async function (req, res) {
 
 
 
+module.exports = { createAuthor, loginAuthor }
 
 
 
 
+//module.exports.loginAuthor = loginAuthor;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//let email2= authorModel.find({email:req.body.email})
+//                if(emai.length!=0){
+//                  res.send({status:false , msg:"email already exist"})
+//                }
 
 
 
@@ -235,12 +222,3 @@ const loginAuthor = async function (req, res) {
 //       error: err.message});
 //     }
 // }
-
-
-module.exports = { createAuthor, loginAuthor }
-//module.exports.loginAuthor = loginAuthor;
-
-//let email2= authorModel.find({email:req.body.email})
-//                if(emai.length!=0){
-//                  res.send({status:false , msg:"email already exist"})
-//                }

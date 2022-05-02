@@ -165,7 +165,7 @@ const updateBlog = async function (req, res) {
         res.status(200).send({ status: true, Data: updateBlogs });
       }
 
-    } else {
+    } else if(authorLoggedIn !== blog.authorId) {
       res.status(401).send({ status: false, Error: "Not authorised" });
     }
   } catch (err) {
@@ -269,8 +269,6 @@ const deleteBlog1 = async function (req, res) {
       for (i = 0; i < division.length; i++) {
 
         if (authorLoggedIn != division[i].authorId) {
-
-
 
           NotAuth.push(division[i])
 
