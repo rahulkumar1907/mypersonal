@@ -118,6 +118,21 @@ module.exports = { createAuthor, loginAuthor }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //module.exports.loginAuthor = loginAuthor;
 
 //let email2= authorModel.find({email:req.body.email})

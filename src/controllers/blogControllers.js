@@ -17,7 +17,7 @@ const createBlog = async function (req, res) {
 
     if (arr.length == 0) return res.status(400).send({ staus: false, Error: "Invalid request. Please provide Details" })
     else if (!blog.title) return res.status(400).send({ staus: false, Error: "title is required" })
-    else if (!blog.body) return res.status(400).send({ staus: false, Error: "body is required" })
+    else if (!blog.body) return res.status(400).send({ staus: false, Error: "Blog body is required" })
     else if (!blog.authorId) return res.status(400).send({ staus: false, Error: "authorId is required" })
     else if (mongoose.Types.ObjectId.isValid(req.body.authorId) == false) return res.status(400).send({ staus: false, Error: "Author Id is Invalid" })
     else if (!blog.tags) return res.status(400).send({ staus: false, Error: "tags is required" })
@@ -311,6 +311,81 @@ module.exports.getBlog = getBlog;
 module.exports.updateBlog = updateBlog;
 module.exports.deleteBlog = deleteBlog;
 module.exports.deleteBlog1 = deleteBlog1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
