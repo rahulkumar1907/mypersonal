@@ -1,20 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const authorController = require("../controllers/authorControllers")
-const blogController = require("../controllers/blogControllers")
-const middleWare = require("../middlewares/commonMiddleware")
+const collegeController = require("../controllers/collegeController")
+ const internController = require("../controllers/internController")
+// const middleWare = require("../middlewares/commonMiddleware")
 
-router.post("/authors",authorController.createAuthor)
-router.post("/blogs",blogController.createBlog)
+router.post("/colleges",collegeController.createCollege)
 
-router.get("/blogs",middleWare.authentication,blogController.getBlog)
+ router.post("/interns",internController.createIntern)
 
-router.put("/blogs/:blogId",middleWare.authentication,middleWare.authorisation,blogController.updateBlog)
+ router.get("/getdetails",internController.collegeDetails)
 
-router.delete("/blogs/:blogId",middleWare.authentication,middleWare.authorisation,blogController.deleteBlog)
-router.delete("/blogs",middleWare.authentication,middleWare.authorisation,blogController.deleteBlog1)
+// router.put("/blogs/:blogId",middleWare.authentication,middleWare.authorisation,blogController.updateBlog)
 
-router.post("/login", authorController.loginAuthor)
+// router.delete("/blogs/:blogId",middleWare.authentication,middleWare.authorisation,blogController.deleteBlog)
+// router.delete("/blogs",middleWare.authentication,middleWare.authorisation,blogController.deleteBlog1)
+
+// router.post("/login", authorController.loginAuthor)
 
 
 module.exports = router;
