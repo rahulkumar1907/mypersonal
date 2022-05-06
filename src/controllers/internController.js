@@ -7,7 +7,7 @@
  const createIntern = async function(req,res){
    try {
   let Body = req.body
-  console.log(Body)
+  
   let arr = Object.keys(Body)
 
   if (arr.length == 0) return res.status(400).send({ status: false, msg: "Invalid request. Please provide Details" })
@@ -18,7 +18,7 @@
   else if (mongoose.Types.ObjectId.isValid(Body.collegeId) == false) return res.status(400).send({ staus: false, msg: "College Id is Invalid" })
 
   let Id = await collegeModel.findById({ _id: Body.collegeId});
-  if(!Id){res.status(400).send({ status: false, Error: "College does not exist!" });}
+  if(!Id){res.status(400).send({ status: false, Error: "College already  exist!" });}
   else{
       let internCreated = await internModel.create(Body);
       res.status(201).send({ status: true, data: internCreated});
@@ -40,13 +40,14 @@ const collegeDetails =async function(req ,res){
       const college = await collegeModel.findOne({name: info ,isDeleted:false})
       if(!college) return res.status(400).send({status:false , message:"Did not found college with this name please register first"})
         const { name, fullName, logoLink } = college
-        const data = { name, fullName, logoLink };
-        data["interests"] = [];
+        
+        // data["interests"] = [];
         const collegeIdFromcollege = college._id;
 
         const internList = await internModel.find({ collegeId: collegeIdFromcollege  ,isDeleted:false});
         if (!internList) return res.status(404).send({ status: false, message: "${info} We Did not Have Any Intern With This College" });
-        data["interests"] = [...internList]
+        // data["interests"] = [...internList]
+        const data = { name, fullName, logoLink ,interests:internList};
         res.status(200).send({ status: true, data: data });
   }
   catch(error){
