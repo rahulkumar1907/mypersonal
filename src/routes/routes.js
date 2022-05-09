@@ -4,7 +4,8 @@ const userControllers = require("../controllers/userControllers");
 const bookControllers = require("../controllers/bookControllers");
 
 
-router.post("/register",userControllers.createUser)
+router.post("/register",userControllers.createUser);
+router.post("/login",userControllers.loginUser);
 
 
 

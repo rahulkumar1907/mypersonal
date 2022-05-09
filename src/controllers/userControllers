@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const express = require('express');
+const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
 const createUser = async function (req, res) {
@@ -45,4 +46,39 @@ const createUser = async function (req, res) {
 
 }
 
+
+const loginUser = async function (req, res) {
+    let Email = req.body.email;
+    let Password = req.body.password;
+
+    if (!Email) {
+        res
+            .status(400)
+            .send({ status: false, Error: "Please enter an email address." });
+    } else if (!Password) {
+        res.status(400).send({ status: false, message: "Please enter Password." });
+    } else {
+        let user = await userModel.findOne({ email: Email, password: Password, });
+        if (!user)
+            return res.status(400).send({
+                status: false,
+                message: "Email or the Password is incorrect.",
+            });
+
+        let token = jwt.sign(
+            {
+                userId: user._id.toString(),
+                batch: "uranium",
+                organisation: "FunctionUp",
+            },
+            "project3-uranium",
+            { expiresIn: "4h" }
+        );
+        res.setHeader("x-api-key", token);
+        res.status(200).send({ status: true, message: token });
+    }
+};
+
+
 module.exports.createUser = createUser;
+module.exports.loginUser = loginUser;
