@@ -1,0 +1,48 @@
+const mongoose = require('mongoose')
+const express = require('express');
+const userModel = require("../models/userModel");
+
+const createUser = async function (req, res) {
+    try {
+        let Body = req.body;
+        let arr = Object.keys(Body);
+
+
+        if (arr.length == 0) { return res.status(400).send({ status: false, message: "Please provide input" }) };
+        if (!Body.title) { { return res.status(400).send({ status: false, message: "Please provide title" }) } };
+        if (!["Mr", "Mrs", "Miss"].includes(Body.title)) { return res.status(400).send({ status: false, message: "Title Must be of these values [Mr, Mrs, Miss] " }); }
+        if (!Body.name) { { return res.status(400).send({ status: false, message: "Please provide name" }) } };
+        if (!Body.phone) { { return res.status(400).send({ status: false, message: "Please provide phone" }) } };
+        if (!Body.email) { { return res.status(400).send({ status: false, message: "Please provide email" }) } };
+        if (!Body.password) { { return res.status(400).send({ status: false, message: "Please provide password" }) } };
+        if (!Body.address) { { return res.status(400).send({ status: false, message: "Please provide address" }) } };
+        if (!Body.address.street) { { return res.status(400).send({ status: false, message: "Please provide street" }) } };
+        if (!Body.address.city) { { return res.status(400).send({ status: false, message: "Please provide city" }) } };
+        if (!Body.address.pincode) { { return res.status(400).send({ status: false, message: "Please provide pincode" }) } };
+
+        let name = /^[a-zA-Z ]{2,30}$/.test(Body.name);
+        let emailId = /^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(Body.email);
+        let password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/.test(Body.password);
+        let phone = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(Body.phone);
+        let pincode = /^[0-9]{6,6}$/.test(Body.address.pincode);
+
+        if (!name) { return res.status(400).send({ status: false, message: "Please provide a valid name " }) }
+        if (!emailId) { return res.status(400).send({ status: false, message: "Please provide a valid emailId " }) }
+        if (!password) { return res.status(400).send({ status: false, message: "Please provide a valid password ,,Password should include atleast one special character, one uppercase, one lowercase, one number and should be mimimum 8 character long" }) }
+        if (!phone) { return res.status(400).send({ status: false, message: "Please provide a valid phone " }) }
+        if (!pincode) { return res.status(400).send({ status: false, message: "Please provide a valid pincode " }) }
+        let checkEmail = await userModel.findOne({ email: Body.email });
+        if (checkEmail) { return res.status(400).send({ status: false, message: `${Body.email} already exist use different email` }) }
+        let checkPhone = await userModel.findOne({ phone: Body.phone });
+        if (checkPhone) { return res.status(400).send({ status: false, message: `${Body.phone} already exist use different phone number` }) }
+
+        let dataCreated = await userModel.create(Body);
+        res.status(201).send({ status: true, message: "success", data: dataCreated });
+    }
+    catch (err) {
+        res.status(500).send({ status: false, Error: "Server not responding", message: err.message, });
+    }
+
+}
+
+module.exports.createUser = createUser;

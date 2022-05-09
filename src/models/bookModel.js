@@ -1,4 +1,5 @@
 const mongoose=require('mongoose')
+const moment=require('moment')
 const ObjectId =mongoose.Types.ObjectId;
 const bookSchema =new mongoose.Schema({
     title: {type:String, required:true, unique:true},
@@ -9,8 +10,10 @@ const bookSchema =new mongoose.Schema({
     category: {type:String,required:true},
     subcategory: [{type:String, required:true}],
     reviews: {type:Number, default: 0},
-    deletedAt: {Date, }, 
+    deletedAt: {type :Date }, 
     isDeleted: {type:Boolean, default: false},
-    releasedAt: {Date, required:true, moment().format("YYYY-MM-DD")},
+    releasedAt: {type:Date, required:true},
     
   },{tipmestamps:true})
+
+  module.exports = mongoose.model('books', bookSchema) 

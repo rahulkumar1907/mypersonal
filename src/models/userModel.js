@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
-const userSchema= new Schema({{ 
-    title: {type:String, required:true, enum['Mr, Mrs, Miss']},
+const userSchema= new mongoose.Schema({ 
+    title: {type:String, required:true, enum:["Mr", "Mrs", "Miss"]},
     name: {type:String, required:true},
 
     phone: {type:String, required:true, unique:true},
@@ -14,3 +14,5 @@ const userSchema= new Schema({{
     }
     
   },{timestamps:true})
+
+  module.exports = mongoose.model('user', userSchema) 
