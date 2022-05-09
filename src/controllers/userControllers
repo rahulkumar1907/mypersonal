@@ -52,11 +52,11 @@ const loginUser = async function (req, res) {
     let Password = req.body.password;
 
     if (!Email) {
-        res
+       return res
             .status(400)
             .send({ status: false, Error: "Please enter an email address." });
     } else if (!Password) {
-        res.status(400).send({ status: false, message: "Please enter Password." });
+        return res.status(400).send({ status: false, message: "Please enter Password." });
     } else {
         let user = await userModel.findOne({ email: Email, password: Password, });
         if (!user)
