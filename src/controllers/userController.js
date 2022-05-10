@@ -2,9 +2,9 @@ const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
 let keyValid = function (value) {
-    if (typeof (value) == "undefined" || typeof (value) == null) { return true }  
-    if (typeof (value) === "string" && value.trim().length == 0) { return true }
-    return false
+    if (typeof (value) == "undefined" || typeof (value) == null) { return false }  
+    if (typeof (value) === "string" && value.trim().length == 0) { return false }
+    return true
 }
 
 ///////////////////////// -CREATING USER- ///////////////////////////////
@@ -26,7 +26,7 @@ let registerUser = async function (req, res) {
      
 
       if (!name) { return res.status(400).send({ status: false, message: "Please enter name" }) }
-      if (keyValid(name)) return res.status(400).send({ status: false, message: "Name should be valid" })
+      if (!keyValid(name)) return res.status(400).send({ status: false, message: "Name should be valid" })
       if (!name.match(nameregex)) return res.status(400).send({ status: false, message: "Firstname should only contain alphabet" })
          data.name=name.split(' ').filter(word => word).join(' ')
 
@@ -61,10 +61,15 @@ const loginUser = async function (req, res) {
   try{
     let email = req.body.email;
     let password = req.body.password;
+    let emailregex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+
+    if (!keyValid(email)) return res.status(400).send({status:false, messgage:"email is required"})
+    if (!email.match(emailregex)) return res.status(400).send({ status: false, message: "Please enter valid email" })
+
   
-    if (!password) return res.status(400).send({status:false, messsge:"password is required"})
+    if (!keyValid(password)) return res.status(400).send({status:false, messsge:"password is required"})
     
-    if (!email)return res.status(400).send({status:false, messgage:"email is required"})
+    
 
     let checkedUser = await userModel.findOne({ email: email, password: password });
      if (!checkedUser) return res.status(404).send({ status: false, message: "email or password is not correct"});

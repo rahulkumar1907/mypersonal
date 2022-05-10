@@ -12,6 +12,9 @@ router.post("/login", userController.login)
 //////////////////// -BOOK APIS- ////////////////
 router.post("/books",middleware.Authentication,bookController.createBooks);
 
+router.get("/books",middleware.Authentication,bookController.getBooks)
+
+router.put("/books/:bookId",middleware.auth2,bookController.updateBook)
 
 
 

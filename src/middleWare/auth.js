@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const mongoose = require('mongoose');
+const userModel = require("../models/userModel");
 
 /////////////////////// -AUTHENTICATION- //////////////////////////////
 const Authentication = async function (req, res, next) {
@@ -22,10 +23,23 @@ const Authentication = async function (req, res, next) {
      catch (error) { res.status(500).send({ status: false, message: error.massage })}
 };
 
+const auth2 = async function (req, res, next){
+  let userId = req.params.userId
+  let get = await userModel.findById(userId).select({userId:1,_id:0});
+  if (!get){return res.status(400).send(400)({status:false, message:"please enter valid user id"});}
+
+  let token = req.headers["x-api-key"]
+  if(!token){ return res.status(400).send({status:false,message:"Kindly add token"});}
+
+  let decodedToken = jwt.verify(token,"functionUp");
+  if(decodedToken.userId != get.userId){return res.status(403).send({status:false, message:"not authorised"});}
+  next();
+}
+
 
 
 
 //////////////////////// -AUTHORIZATION- ////////////////////////////////
 
 
-module.exports.Authentication= Authentication
+module.exports= {Authentication,auth2}
