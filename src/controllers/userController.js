@@ -7,6 +7,9 @@ let keyValid = function (value) {
     return false
 }
 
+///////////////////////// -CREATING USER- ///////////////////////////////
+
+
 let registerUser = async function (req, res) {
   try {
       let data = req.body
@@ -44,12 +47,14 @@ let registerUser = async function (req, res) {
       }
      
       let newUser = await userModel.create(data);
-      res.status(201).send({status:false, message: 'Success', data:newUser})
+      res.status(201).send({status:true, message: 'Success', data:newUser})
 
   } catch (error) {
-      res.status(500).send({status: true, message: error.message,})
+      res.status(500).send({status:true, message: error.message,})
   }
 };
+
+///////////////////////// -LOGIN USER- ///////////////////////////////
 
 const loginUser = async function (req, res) {
   
@@ -57,19 +62,27 @@ const loginUser = async function (req, res) {
     const email = req.body.email;
     const password = req.body.password;
   
-    if (!password) return res.status(400).send({status:false, msg:"password is required"})
+    if (!password) return res.status(400).send({status:false, messsge:"password is required"})
     
-    if (!email)return res.status(400).send({status:false, msg:"email is required"})
+    if (!email)return res.status(400).send({status:false, messgage:"email is required"})
 
     const checkedUser = await userModel.findOne({ email: email, password: password });
-     if (!checkedUser) return res.status(404).send({ status: false, msg: "email or password is not correct"});
+     if (!checkedUser) return res.status(404).send({ status: false, message: "email or password is not correct"});
 
-     const token = jwt.sign({ userId: checkedUser._id.toString() },"functionUp");
-     return res.status(200).send({ status: true, Token: token });
+     const currTime = Math.floor(Date.now()/1000)
+     const token = jwt.sign(
+       {
+        userId: checkedUser._id,
+        iat: currTime,
+        exp: 1200 + currTime
+      }, "functionUp"
+
+    );
+    return res.status(200).send({ status: true, message: 'Success', Token: token });
 
   }
   catch (error) { 
-    res.status(500).send({ msg: error.message })
+    res.status(500).send({ message: error.message })
   }
   };
 
