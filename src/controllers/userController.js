@@ -50,7 +50,7 @@ let registerUser = async function (req, res) {
       res.status(201).send({status:true, message: 'Success', data:newUser})
 
   } catch (error) {
-      res.status(500).send({status:true, message: error.message,})
+      res.status(500).send({status:false, message: error.message,})
   }
 };
 
@@ -72,7 +72,7 @@ const loginUser = async function (req, res) {
      const currTime = Math.floor(Date.now()/1000)
      const token = jwt.sign(
        {
-        userId: checkedUser._id,
+        userId: checkedUser._id.toString(),
         iat: currTime,
         exp: 1200 + currTime
       }, "functionUp"
@@ -82,7 +82,7 @@ const loginUser = async function (req, res) {
 
   }
   catch (error) { 
-    res.status(500).send({ message: error.message })
+    res.status(500).send({status:false, message: error.message })
   }
   };
 

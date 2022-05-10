@@ -10,7 +10,7 @@ router.post("/register", userController.register)
 router.post("/login", userController.login)
     
 //////////////////// -BOOK APIS- ////////////////
-router.post("/books",middleware.Authentication,bookController.createBook);
+router.post("/books",middleware.Authentication,bookController.createBooks);
 
 
 
