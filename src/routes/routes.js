@@ -4,8 +4,11 @@ const userControllers = require("../controllers/userControllers");
 const bookControllers = require("../controllers/bookControllers");
 
 
-router.post("/register",userControllers.createUser);
-router.post("/login",userControllers.loginUser);
+router.post("/register", userControllers.createUser);
+router.post("/login", userControllers.loginUser);
+
+router.post("/books", bookControllers.createBook);
+router.get("/books", bookControllers.getBook);
 
 
 
@@ -15,5 +18,4 @@ router.post("/login",userControllers.loginUser);
 
 
 
-
-module.exports=router
+module.exports = router
