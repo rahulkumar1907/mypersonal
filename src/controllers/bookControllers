@@ -119,6 +119,8 @@ const getBook = async function (req, res) {
     //reading input
     let query = req.query;
     let { userId, category, subcategory } = query; //destructring
+    console.log(query);
+    console.log(userId);
     let arr = Object.keys(query); //array of object keys
 
     //if empty query params then return all deleted false books
@@ -155,19 +157,19 @@ const getBook = async function (req, res) {
 
     //if filter books from query params
     if (arr.length != 0) {
-      const user_id = query.userId;
-
-      //userId format validation
-      if (!user_id) {
-        if (mongoose.Types.ObjectId.isValid(user_id) == false) {
+      // userId format validation
+      if (!userId && userId != undefined) {
+        console.log("fail");
+        if (mongoose.Types.ObjectId.isValid(userId) == false) {
+          console.log("fail again");
           return res
             .status(400)
             .send({ status: false, message: "userId Invalid" });
         }
       }
 
-      if (user_id) {
-        if (mongoose.Types.ObjectId.isValid(user_id) == false) {
+      if (userId) {
+        if (mongoose.Types.ObjectId.isValid(userId) == false) {
           return res
             .status(400)
             .send({ status: false, message: "userId Invalid" });
