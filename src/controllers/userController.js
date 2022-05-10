@@ -66,11 +66,8 @@ const loginUser = async function (req, res) {
     if (!keyValid(email)) return res.status(400).send({status:false, messgage:"email is required"})
     if (!email.match(emailregex)) return res.status(400).send({ status: false, message: "Please enter valid email" })
 
-  
     if (!keyValid(password)) return res.status(400).send({status:false, messsge:"password is required"})
     
-    
-
     let checkedUser = await userModel.findOne({ email: email, password: password });
      if (!checkedUser) return res.status(404).send({ status: false, message: "email or password is not correct"});
 
@@ -83,7 +80,7 @@ const loginUser = async function (req, res) {
       }, "functionUp"
 
     );
-    res.setHeader("x-api-key",token)
+    res.setHeader("x-api-key", token)
     return res.status(200).send({ status: true, message: 'Success', Token: token });
 
   }
