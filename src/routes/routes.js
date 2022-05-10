@@ -11,12 +11,9 @@ router.post("/login", userControllers.loginUser);
 
 router.post("/books", bookControllers.createBook);
 router.get("/books", bookControllers.getBook);
-
-
-
-
-
-
+router.get("/books/:bookId", bookControllers.getBookDetails);
+router.put("/books/:bookId", bookControllers.updateBook);
+router.delete("/books/:bookId", bookControllers.deleteBook);
 
 
 
