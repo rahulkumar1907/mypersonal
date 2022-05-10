@@ -6,12 +6,17 @@ const Authentication = async function (req, res, next) {
     // compare the logged in user's Id and the Id in request
     try {
   
-      const token = req.headers["x-api-key"];
-      if (!token) { req.headers["X-api-key"]}
+      let token = req.headers["x-api-key"];
+      // if (!token) { req.headers["X-api-key"]}
       if (!token) return res.status(404).send({ status: false, message: "token must be required in the header" });
   
       let decodedToken = jwt.verify(token, "functionUp")
         if (!decodedToken) return  res.status(400).send({ status: false, message: "invalid token" });
+
+        // if (decodedtoken.userId != get.userId) {
+        //   return res.status(403).send({ status: false, msg: "NOT AUTHORISED" });
+        // }
+        req.decodedToken = decodedToken;
         next();
       }
      catch (error) { res.status(500).send({ status: false, message: error.massage })}

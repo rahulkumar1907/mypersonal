@@ -59,18 +59,18 @@ let registerUser = async function (req, res) {
 const loginUser = async function (req, res) {
   
   try{
-    const email = req.body.email;
-    const password = req.body.password;
+    let email = req.body.email;
+    let password = req.body.password;
   
     if (!password) return res.status(400).send({status:false, messsge:"password is required"})
     
     if (!email)return res.status(400).send({status:false, messgage:"email is required"})
 
-    const checkedUser = await userModel.findOne({ email: email, password: password });
+    let checkedUser = await userModel.findOne({ email: email, password: password });
      if (!checkedUser) return res.status(404).send({ status: false, message: "email or password is not correct"});
 
-     const currTime = Math.floor(Date.now()/1000)
-     const token = jwt.sign(
+     let currTime = Math.floor(Date.now()/1000)
+     let token = jwt.sign(
        {
         userId: checkedUser._id.toString(),
         iat: currTime,
@@ -78,6 +78,7 @@ const loginUser = async function (req, res) {
       }, "functionUp"
 
     );
+    res.setHeader("x-api-key",token)
     return res.status(200).send({ status: true, message: 'Success', Token: token });
 
   }

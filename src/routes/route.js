@@ -3,7 +3,7 @@ const router = express.Router();
 
 const userController = require("../controllers/userController")
 const bookController = require("../controllers/bookController")
-const middleware = require("../middleware/auth");
+const middleware = require("../middleWare/auth");
 
 //////////////////// -USER APIS- ////////////////
 router.post("/register", userController.register)
