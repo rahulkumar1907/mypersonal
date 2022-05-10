@@ -12,12 +12,12 @@ let createBook = async function (req, res) {
         if(!Object.keys(data).length) return res.status(400).send({status:false, message: "you must enter data"})
 
         if(!title) return res.status(400).send({ status: false, message: "Please enter a title"})
-        let duplicateTitle = await userModel.findOne({ title: title })
+        let duplicateTitle = await bookModel.findOne({ title: title })
         if (duplicateTitle) return res.status(400).send({ status: false, message: "title already exist" })
-        
+
 
         
-        let newBook = await userModel.create(data);
+        let newBook = await bookModel.create(data);
         res.status(201).send({status:true, message: 'Success', data:newBook})
   
     } catch (error) {
