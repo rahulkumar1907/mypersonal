@@ -116,6 +116,16 @@ const updateBook = async function (req, res) {
         /*********************************************************************************/
 
         let { title, excerpt, ISBN } = req.body
+
+        //Check title
+        let duplicateTitle = await bookModel.findOne({ title: title });
+        if (duplicateTitle) return res.status(400).send({ status: false, message: "This title is already exist" })
+
+        //check ISBN
+        let checkIsbn = await bookModel.findOne({ ISBN: ISBN });
+        if (checkIsbn) return res.status(400).send({ status: false, message: "This ISBN is already exists" });
+
+        //Updat book
         let updatedbook = await bookModel.findOneAndUpdate({ _id: req.params.bookId, isDeleted: false },
             {
                 title: title,
