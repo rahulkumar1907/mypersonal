@@ -15,6 +15,8 @@ router.post("/books", middleware, bookController.createBooks);
 
 router.get("/books", middleware, bookController.getBooks)
 
+router.get("/books/:bookId", middleware, bookController.getBookFromBookId)
+
 router.put("/books/:bookId", middleware, bookController.updateBook)
 
 router.delete("/books/:bookId", middleware, bookController.deleteBook)
