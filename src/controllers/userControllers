@@ -200,7 +200,7 @@ const loginUser = async function (req, res) {
           organisation: "FunctionUp",
         },
         "project3-uranium",
-        { expiresIn: "4h" } //expires in 4 hours
+        { expiresIn: "600s" } //expires in 10 minutes
       );
       res.setHeader("x-api-key", token);
       res.status(200).send({ status: true, message: token });

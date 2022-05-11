@@ -142,11 +142,12 @@ const getBook = async function (req, res) {
       });
 
       //sorted books in alphabetical order
-      findBook.sort(function (a, b) {
-        var textA = a.title.toUpperCase();
-        var textB = b.title.toUpperCase();
-        return textA < textB ? -1 : textA > textB ? 1 : 0;
-      });
+      findBook.sort({ title: -1 });
+      // (function (a, b) {
+      //   var textA = a.title.toUpperCase();
+      //   var textB = b.title.toUpperCase();
+      //   return textA < textB ? -1 : textA > textB ? 1 : 0;
+      // });
 
       //if no book found
       if (!findBook) {
@@ -194,11 +195,7 @@ const getBook = async function (req, res) {
         });
 
       //sorted filter books in alphabetical order
-      filterBook.sort(function (a, b) {
-        var textA = a.title.toUpperCase();
-        var textB = b.title.toUpperCase();
-        return textA < textB ? -1 : textA > textB ? 1 : 0;
-      });
+      filterBook.sort({ title: -1 });
 
       //no books with given filter
       if (filterBook.length == 0) {
@@ -234,9 +231,11 @@ const getBookDetails = async function (req, res) {
     }
 
     //fetch book with bookId
-    const book = await bookModel.findOne({
-      $and: [{ _id }, { isDeleted: false }],
-    });
+    const book = await bookModel
+      .findOne({
+        $and: [{ _id }, { isDeleted: false }],
+      })
+      .lean();
 
     //no books found
     if (!book) {
@@ -248,31 +247,10 @@ const getBookDetails = async function (req, res) {
       $and: [{ bookId: _id }, { isDeleted: false }],
     });
 
-    // //added reviews in book
-    // let bookDetails = {
-    //   book,
-    //   reviewData: review,
-    // };
-
-    let bookDetails = {
-      _id: book._id,
-      title: book.title,
-      excerpt: book.excerpt,
-      userId: book.userId,
-      ISBN: book.ISBN,
-      category: book.category,
-      subcategory: book.subcategory,
-      deletedAt: book.deletedAt,
-      review: book.reviews,
-      isDeleted: book.isDeleted,
-      releasedAt: book.releasedAt,
-      createdAt: book.createdAt,
-      updatedAt: book.updatedAt,
-      reviewsData: review,
-    };
+    book.reviewsData = review;
 
     //respond book with reviews
-    res.status(200).send({ status: true, data: bookDetails });
+    res.status(200).send({ status: true, data: book });
   } catch (err) {
     res.status(500).send({
       status: false,

@@ -65,32 +65,32 @@ const createReview = async function (req, res) {
     body.bookId = _id;
     //create review
     const review = await reviewModel.create(body);
-    const updatedBook = await bookModel.findByIdAndUpdate(
-      { _id },
-      { $inc: { reviews: 1 } },
-      { new: true }
-    );
+    const updatedBook = await bookModel
+      .findByIdAndUpdate({ _id }, { $inc: { reviews: 1 } }, { new: true })
+      .lean();
 
-    const reviewedBook = {
-      _id: updatedBook._id,
-      title: updatedBook.title,
-      excerpt: updatedBook.excerpt,
-      userId: updatedBook.userId,
-      ISBN: updatedBook.ISBN,
-      category: updatedBook.category,
-      subcategory: updatedBook.subcategory,
-      deletedAt: updatedBook.deletedAt,
-      review: updatedBook.reviews,
-      isDeleted: updatedBook.isDeleted,
-      releasedAt: updatedBook.releasedAt,
-      createdAt: updatedBook.createdAt,
-      updatedAt: updatedBook.updatedAt,
-      reviewsData: review,
-    };
+    // const reviewedBook = {
+    //   _id: updatedBook._id,
+    //   title: updatedBook.title,
+    //   excerpt: updatedBook.excerpt,
+    //   userId: updatedBook.userId,
+    //   ISBN: updatedBook.ISBN,
+    //   category: updatedBook.category,
+    //   subcategory: updatedBook.subcategory,
+    //   deletedAt: updatedBook.deletedAt,
+    //   review: updatedBook.reviews,
+    //   isDeleted: updatedBook.isDeleted,
+    //   releasedAt: updatedBook.releasedAt,
+    //   createdAt: updatedBook.createdAt,
+    //   updatedAt: updatedBook.updatedAt,
+    //   reviewsData: review,
+    // };
+
+    updatedBook.reviewsData = review;
 
     res
       .status(200)
-      .send({ status: true, message: "Success", data: reviewedBook });
+      .send({ status: true, message: "Success", data: updatedBook });
   } catch (err) {
     res.status(500).send({
       status: false,
@@ -131,7 +131,7 @@ const updateReview = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(reviewId) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "Invalid bookId" });
       }
     }
 
@@ -163,31 +163,16 @@ const updateReview = async function (req, res) {
 
     const updatedReview = await reviewModel.findByIdAndUpdate(
       { _id: reviewId },
-      { body, reviewedAt: date },
+      { $set: { reviewedAt: date, review, reviewedBy, rating } },
       { new: true }
     );
-    const updatedBook = await bookModel.findById({ _id });
+    const updatedBook = await bookModel.findById({ _id }).lean();
 
-    const reviewedBook = {
-      _id: updatedBook._id,
-      title: updatedBook.title,
-      excerpt: updatedBook.excerpt,
-      userId: updatedBook.userId,
-      ISBN: updatedBook.ISBN,
-      category: updatedBook.category,
-      subcategory: updatedBook.subcategory,
-      deletedAt: updatedBook.deletedAt,
-      review: updatedBook.reviews,
-      isDeleted: updatedBook.isDeleted,
-      releasedAt: updatedBook.releasedAt,
-      createdAt: updatedBook.createdAt,
-      updatedAt: updatedBook.updatedAt,
-      reviewsData: updatedReview,
-    };
+    updatedBook.reviewsData = updatedReview;
 
     res
       .status(200)
-      .send({ status: true, message: "Success", data: reviewedBook });
+      .send({ status: true, message: "Success", data: updatedBook });
   } catch (err) {
     res.status(500).send({
       status: false,
@@ -207,7 +192,7 @@ const deleteReview = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(_id) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "Invalid bookId" });
       }
     }
 
@@ -250,33 +235,15 @@ const deleteReview = async function (req, res) {
     );
 
     //decrease review count
-    const updateReviewCount = await bookModel.findByIdAndUpdate(
-      { _id },
-      { $inc: { reveiws: -1 } },
-      { new: true }
-    );
+    const updateReviewCount = await bookModel
+      .findByIdAndUpdate({ _id }, { $inc: { reviews: -1 } }, { new: true })
+      .lean();
 
-    //new object for updated book
-    const updatedBook = {
-      _id: updateReviewCount._id,
-      title: updateReviewCount.title,
-      excerpt: updateReviewCount.excerpt,
-      userId: updateReviewCount.userId,
-      ISBN: updateReviewCount.ISBN,
-      category: updateReviewCount.category,
-      subcategory: updateReviewCount.subcategory,
-      deletedAt: updateReviewCount.deletedAt,
-      review: updateReviewCount.reviews,
-      isDeleted: updateReviewCount.isDeleted,
-      releasedAt: updateReviewCount.releasedAt,
-      createdAt: updateReviewCount.createdAt,
-      updatedAt: updateReviewCount.updatedAt,
-      reviewsData: deleteReview,
-    };
+    updateReviewCount.reviewsData = deleteReview;
 
     res
       .status(200)
-      .send({ status: true, message: "Success", data: updatedBook });
+      .send({ status: true, message: "Success", data: updateReviewCount });
   } catch (err) {
     res.status(500).send({
       status: false,
