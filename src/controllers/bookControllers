@@ -46,7 +46,7 @@ const createBook = async function (req, res) {
         .status(400)
         .send({ status: false, message: "Please provide subcategory" });
     }
-    // if (!Body.reviews) { return res.status(400).send({ status: false, message: "Please provide review" }) };
+
     if (!Body.releasedAt) {
       return res
         .status(400)
@@ -229,7 +229,7 @@ const getBookDetails = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(_id) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "Invalid bookId" });
       }
     }
 
@@ -292,7 +292,7 @@ const updateBook = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(_id) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "Invalid bookId" });
       }
     }
 
@@ -355,7 +355,7 @@ const deleteBook = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(_id) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "Invalid bookId" });
       }
     }
 
