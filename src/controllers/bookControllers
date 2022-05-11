@@ -244,12 +244,31 @@ const getBookDetails = async function (req, res) {
     }
 
     //fetch reviews of the above book
-    const review = await reviewModel.find({ bookId: _id });
+    const review = await reviewModel.find({
+      $and: [{ bookId: _id }, { isDeleted: false }],
+    });
 
-    //added reviews in book
+    // //added reviews in book
+    // let bookDetails = {
+    //   book,
+    //   reviewData: review,
+    // };
+
     let bookDetails = {
-      book,
-      reviewData: review,
+      _id: book._id,
+      title: book.title,
+      excerpt: book.excerpt,
+      userId: book.userId,
+      ISBN: book.ISBN,
+      category: book.category,
+      subcategory: book.subcategory,
+      deletedAt: book.deletedAt,
+      review: book.reviews,
+      isDeleted: book.isDeleted,
+      releasedAt: book.releasedAt,
+      createdAt: book.createdAt,
+      updatedAt: book.updatedAt,
+      reviewsData: review,
     };
 
     //respond book with reviews
