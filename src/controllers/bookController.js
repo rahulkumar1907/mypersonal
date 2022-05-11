@@ -14,7 +14,7 @@ let keyValid = function (value) {
 const createBooks = async function (req, res) {
     try {
         let data = req.body;
-        let decodedToken = req.decodedToken
+        
         // destructure
         let { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data;
 

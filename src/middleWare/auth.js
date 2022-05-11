@@ -1,7 +1,4 @@
 const jwt = require("jsonwebtoken");
-const mongoose = require('mongoose');
-const userModel = require("../models/userModel");
-const bookModel = require("../models/bookModel");
 
 /////////////////////// -AUTHENTICATION- //////////////////////////////
 const Authentication = async function (req, res, next) {
@@ -12,8 +9,7 @@ const Authentication = async function (req, res, next) {
       if (!token) return res.status(404).send({ status: false, message: "token must be required in the header" });
   
       let decodedToken = jwt.verify(token, "functionUp")
-
-        // req.decodedToken = decodedToken;
+      
         req.headers['User-login'] = decodedToken.userId
         next();
       }
