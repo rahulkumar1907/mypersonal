@@ -35,7 +35,7 @@ const createBooks = async function (req, res) {
 
         //Check excerpt
         if (!excerpt) return res.status(400).send({ status: false, message: "you must give excerpt of the book" })
-        if (!excerpt.match(excerptregex)) return res.status(400).send({ status: false, message: "please enter a excerpt of the book" })
+        if (!excerpt.trim().match(excerptregex)) return res.status(400).send({ status: false, message: "please enter a excerpt of the book" })
 
         //Check userId
         if (!userId) return res.status(400).send({ status: false, message: "you must give UserId" });
@@ -46,7 +46,7 @@ const createBooks = async function (req, res) {
 
         //Check ISBN
         if (!ISBN) return res.status(400).send({ status: false, message: "you must give ISBN" });
-        if (!ISBN.match(ISBNregex)) return res.status(400).send({ status: false, message: "please enter valid ISBN of the book" });
+        if (!ISBN.trim().match(ISBNregex)) return res.status(400).send({ status: false, message: "please enter valid ISBN of the book" });
 
         let checkIsbn = await bookModel.findOne({ ISBN: ISBN });
         if (checkIsbn) return res.status(400).send({ status: false, message: "This ISBN is already exists" });
@@ -60,7 +60,7 @@ const createBooks = async function (req, res) {
         subcategory = [...new Set(subcategory)]
 
         if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt must be present" });
-        if (!releasedAt.match(dateRegex)) return res.status(400).send({ status: false, message: "please enter valid date" })
+        if (!releasedAt.trim().match(dateRegex)) return res.status(400).send({ status: false, message: "please enter valid date" })
 
         // **********************************************Authorization Check**************************************/
         if (req.headers['User-login'] !== data.userId)
@@ -159,7 +159,7 @@ const deleteBook = async function (req, res) {
     }
     catch (err) {
         console.log(err.message)
-        res.status(500).send({ status: false, msg: (err.message) })
+        res.status(500).send({ status: false, msg: (err.message)})
     }
 }
 
