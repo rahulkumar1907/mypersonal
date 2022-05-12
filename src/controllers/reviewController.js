@@ -82,7 +82,7 @@ const updateReview = async function(req, res){
 
     if(searchBook.isDeleted == false){
         if(searchReview.isDeleted == false){
-            const updatedReview = await reviewModel.findOneAndUpdate({_id: reviewId}, {review: review, rating: rating, reviewedBy: reviewedBy}, { new: true })
+            const updatedReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId}, {review: review, rating: rating, reviewedBy: reviewedBy}, { new: true })
 
             return res.status(200).send({status: true, message: "Books list", data: updatedReview})
         }else {
@@ -100,6 +100,7 @@ const updateReview = async function(req, res){
 }
 
 ///////////////////////// -DELETE REVIEW- ///////////////////////////////
+
 const deleteReview = async function (req, res){
     try { 
     let bookId = req.params.bookId

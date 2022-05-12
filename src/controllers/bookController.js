@@ -108,14 +108,15 @@ const getBookFromBookId = async function(req, res){
     if(!mongoose.isValidObjectId(data)) res.status(400).send({status: false, message: "BookId must be valid"});
 
     const findBook = await bookModel.findOne({_id: data, isDeleted: false})
-    // console.log(findBook)
+
     if(!findBook) return res.status(404).send({status: false, message: "Book not found"});
 
         const reviewedBook = await reviewModel.find({bookId: data})
+        
         // let obj = {
-        //     ...findBook,
-        //    
+        //     ...findBook
         // }
+
         findBook._doc.reviewsData = reviewedBook
         
         return res.status(200).send({status: true, message: 'Book lists', data: findBook})
