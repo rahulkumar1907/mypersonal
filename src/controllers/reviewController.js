@@ -115,7 +115,7 @@ const deleteReview = async function (req, res){
     if(!checkReview) return res.status(404).send({ status: false, message: "Review doesn't exist"})
 
 
-    const deleteReview = await reviewModel.findOneAndUpdate({_id: reviewId, isDeleted: false}, { isDeleted: true })
+    const deleteReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId:bookId, isDeleted: false}, { isDeleted: true })
 
     if(!deleteReview) return res.status(404).send({ status: false, message: "review not found"});
     
