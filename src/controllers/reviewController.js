@@ -12,7 +12,7 @@ const createReview = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(_id) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "bookId Invalid" });
       }
     }
 
@@ -23,7 +23,7 @@ const createReview = async function (req, res) {
 
     //no books found
     if (!book) {
-      return res.status(200).send({ status: true, data: "book not found" });
+      return res.status(404).send({ status: true, data: "book not found" });
     }
 
     //reading request body
@@ -57,7 +57,7 @@ const createReview = async function (req, res) {
     if (!validRating) {
       return res.status(400).send({
         status: false,
-        message: "Invalid rating - rating should be between 1 to 5",
+        message: "Invalid rating - rating should be a Number between 1 to 5",
       });
     }
 
@@ -67,7 +67,7 @@ const createReview = async function (req, res) {
     const review = await reviewModel.create(body);
     const updatedBook = await bookModel
       .findByIdAndUpdate({ _id }, { $inc: { reviews: 1 } }, { new: true })
-      .lean();
+      .lean(); //unfreeze doc.
 
     // const reviewedBook = {
     //   _id: updatedBook._id,
@@ -110,7 +110,7 @@ const updateReview = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(_id) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "bookId Invalid" });
       }
     }
 
@@ -121,7 +121,7 @@ const updateReview = async function (req, res) {
 
     //no books found
     if (!book) {
-      return res.status(200).send({ status: true, data: "book not found" });
+      return res.status(404).send({ status: true, data: "book not found" });
     }
 
     //reading reviewId form path
@@ -131,7 +131,7 @@ const updateReview = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(reviewId) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "Invalid bookId" });
+          .send({ status: false, message: "Invalid reviewId" });
       }
     }
 
@@ -142,7 +142,7 @@ const updateReview = async function (req, res) {
 
     //no books found
     if (!oldReview) {
-      return res.status(200).send({ status: true, data: "review not found" });
+      return res.status(404).send({ status: true, data: "review not found" });
     }
 
     //reading request body
@@ -203,7 +203,7 @@ const deleteReview = async function (req, res) {
 
     //no books found
     if (!book) {
-      return res.status(200).send({ status: true, data: "book not found" });
+      return res.status(404).send({ status: true, data: "book not found" });
     }
 
     //reading reviewId form path
@@ -213,7 +213,7 @@ const deleteReview = async function (req, res) {
       if (mongoose.Types.ObjectId.isValid(reviewId) == false) {
         return res
           .status(400)
-          .send({ status: false, message: "userId Invalid" });
+          .send({ status: false, message: "Invalid reviewId" });
       }
     }
 
@@ -224,13 +224,16 @@ const deleteReview = async function (req, res) {
 
     //no books found
     if (!oldReview) {
-      return res.status(200).send({ status: true, data: "review not found" });
+      return res.status(404).send({ status: true, data: "review not found" });
     }
+
+    //date format
+    const date = new Date().toISOString();
 
     //delete Review
     const deleteReview = await reviewModel.findByIdAndUpdate(
       { _id: reviewId },
-      { $set: { isDeleted: true } },
+      { $set: { isDeleted: true, deletedAt: date } },
       { new: true }
     );
 

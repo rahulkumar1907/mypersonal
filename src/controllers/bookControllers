@@ -130,7 +130,7 @@ const getBook = async function (req, res) {
     let arr = Object.keys(query); //array of object keys
 
     //if empty query params then return all deleted false books
-    if (arr.length == 0) {
+    if (arr.length === 0) {
       let findBook = await bookModel.find({ isDeleted: false }).select({
         _id: 1,
         title: 1,
@@ -142,12 +142,12 @@ const getBook = async function (req, res) {
       });
 
       //sorted books in alphabetical order
-      findBook.sort({ title: -1 });
-      // (function (a, b) {
-      //   var textA = a.title.toUpperCase();
-      //   var textB = b.title.toUpperCase();
-      //   return textA < textB ? -1 : textA > textB ? 1 : 0;
-      // });
+      // findBook.sort({ title: -1 });
+      findBook.sort(function (a, b) {
+        var textA = a.title.toUpperCase();
+        var textB = b.title.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
 
       //if no book found
       if (!findBook) {
@@ -195,7 +195,11 @@ const getBook = async function (req, res) {
         });
 
       //sorted filter books in alphabetical order
-      filterBook.sort({ title: -1 });
+      filterBook.sort(function (a, b) {
+        var textA = a.title.toUpperCase();
+        var textB = b.title.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
 
       //no books with given filter
       if (filterBook.length == 0) {
@@ -211,7 +215,7 @@ const getBook = async function (req, res) {
     res.status(500).send({
       status: false,
       Error: "Server not responding",
-      msg: err.message,
+      message: err.message,
     });
   }
 };
@@ -235,11 +239,11 @@ const getBookDetails = async function (req, res) {
       .findOne({
         $and: [{ _id }, { isDeleted: false }],
       })
-      .lean();
+      .lean(); //used to lean to unfreeze document received from mongoDB
 
     //no books found
     if (!book) {
-      return res.status(200).send({ status: true, data: "book not found" });
+      return res.status(404).send({ status: true, data: "book not found" });
     }
 
     //fetch reviews of the above book

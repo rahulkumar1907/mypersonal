@@ -29,7 +29,7 @@ const authentication = async function (req, res, next) {
         .status(401)
         .send({ status: false, message: "Authentication failed" });
     }
-
+    console.log("authentication successful")
     next();
     // });
   } catch (error) {
@@ -65,6 +65,8 @@ const authorization = async function (req, res, next) {
           .status(401)
           .send({ status: false, message: "Not authorised" });
       }
+
+      console.log("authorization successful")
 
       next();
     }
