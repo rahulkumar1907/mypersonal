@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 const reviewModel = require('../models/reviewModel')
 
 
-///////////////////////// -CREATING BOOK- ///////////////////////////////
+
 // validation for user sendind empty string
 let keyValid = function (value) {
     if (typeof (value) == "undefined" || typeof (value) == null) { return false }
@@ -12,6 +12,7 @@ let keyValid = function (value) {
     return true
 }
 
+///////////////////////// -CREATE BOOK- ///////////////////////////////
 const createBooks = async function (req, res) {
     try {
         let data = req.body;
@@ -77,6 +78,7 @@ const createBooks = async function (req, res) {
     }
 }
 
+///////////////////////// -GET BOOK- ///////////////////////////////
 const getBooks = async function (req, res) {
     try {
         let data = req.query
@@ -98,6 +100,7 @@ const getBooks = async function (req, res) {
 
 }
 
+///////////////////////// -GET-BOOK-BY-ID ///////////////////////////////
 const getBookFromBookId = async function(req, res){
     let data = req.params.bookId
     if(!data) return res.status(400).send({status: false, message: "BookId must be provide"});
@@ -122,7 +125,7 @@ const getBookFromBookId = async function(req, res){
 }
 
 
-
+///////////////////////// -UPDATE BOOK- ///////////////////////////////
 const updateBook = async function (req, res) {
     try {
         /*************************************VALIDATION****************************************/
@@ -165,7 +168,7 @@ const updateBook = async function (req, res) {
     catch (error) { res.status(500).send({ status: false, message: error.message }) }
 }
 
-
+///////////////////////// -DELETE BOOK- ///////////////////////////////
 const deleteBook = async function (req, res) {
     try {
         /*******************************VALIDATION***********************************/
