@@ -118,6 +118,8 @@ const deleteReview = async function (req, res){
     const deleteReview = await reviewModel.findOneAndUpdate({_id: reviewId, isDeleted: false}, { isDeleted: true })
 
     if(!deleteReview) return res.status(404).send({ status: false, message: "review not found"});
+    
+    await bookModel.findOneAndUpdate({_id: bookId, isDeleted: false}, {$inc: {reviews: -1}})
 
     res.status(200).send({ status: true, message: "Review has been deleted successfully" });
 }
