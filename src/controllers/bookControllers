@@ -209,6 +209,9 @@ const getBook = async function (req, res) {
         .collation({ locale: "en", strength: 2 })
         .sort({ title: 1 });
 
+      /*Collation allows users to specify language-specific rules for string comparison,
+        such as rules for lettercase and accent marks.*/
+
       // //sorted filter books in alphabetical order
       // filterBook.sort(function (a, b) {
       //   var textA = a.title.toUpperCase();
