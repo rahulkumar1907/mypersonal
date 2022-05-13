@@ -53,7 +53,7 @@ const createReview = async function (req, res) {
     }
 
     //rating validation
-    const validRating = /^([1-5]|1[05])$/.test(rating);
+    const validRating = /^([1-5]|1[5])$/.test(rating);
     if (!validRating) {
       return res.status(400).send({
         status: false,
@@ -156,6 +156,15 @@ const updateReview = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: "Please provide input" });
+    }
+
+    //rating validation
+    const validRating = /^([1-5]|1[5])$/.test(rating);
+    if (!validRating) {
+      return res.status(400).send({
+        status: false,
+        message: "Invalid rating - rating should be a Number between 1 to 5",
+      });
     }
 
     //date format
