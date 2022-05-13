@@ -78,22 +78,11 @@ const updateReview = async function(req, res){
 
     const updateReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId, isDeleted:false}, {review: review, rating: rating, reviewedBy: reviewedBy}, {new: true})
 
-    if(!updateReview) return res.status(404).send({ status: false, message: " Review deleted or not exist with this id"})
+    if(!updateReview) return res.status(404).send({ status: false, message: "Review deleted or not exist with this id"})
 
     return res.status(200).send({status: true, message: "Books list", data: updateReview})
 
-    // if(searchBook.isDeleted == false){
-    //     if(searchReview.isDeleted == false){
-    //         const updatedReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId}, {review: review, rating: rating, reviewedBy: reviewedBy}, { new: true })
-
-    //         return res.status(200).send({status: true, message: "Books list", data: updatedReview})
-    //     }else {
-    //         return res.status(400).send({ status: false, message: "Unable to update. Review has been already deleted"})
-
-    //     } 
-    // }else {
-    //     return res.status(400).send({ status: false, message: "Unable to update. Book already deleted"})
-    // }   
+ 
     }catch(error) {
     res.status(500).send({ status: false, message: error.message }) 
 
