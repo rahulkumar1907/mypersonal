@@ -86,11 +86,11 @@ const getBooks = async function (req, res) {
         let options = [{ userId: data.userId }, { category: data.category }, { subcategory: data.subcategory }]
 
         if (!Object.keys(data).length) {
-            let filter = await bookModel.find({ $and: [data, { isDeleted: false }] }).select({ "_id": 1, "title": 1, "excerpt": 1, "userId": 1, "category": 1, "releasedAt": 1, "reviews": 1 }).sort({ "title": 1 })
+            let filter = await bookModel.find({ $and: [data, { isDeleted: false }] }).select({ "_id": 1, "title": 1, "excerpt": 1, "userId": 1, "category": 1, "releasedAt": 1, "reviews": 1 }).sort({title: 1 })
             return res.status(200).send({ status: true, message: "Books list", data: filter })
         }
 
-        let filter = await bookModel.find({ $or: options, isDeleted: false }).select({ "_id": 1, "title": 1, "excerpt": 1, "userId": 1, "category": 1, "releasedAt": 1, "reviews": 1 }).sort({ "title": 1 })
+        let filter = await bookModel.find({ $or: options, isDeleted: false }).select({ "_id": 1, "title": 1, "excerpt": 1, "userId": 1, "category": 1, "releasedAt": 1, "reviews": 1 }).sort({ title: 1 })
         if (!filter.length)
             return res.status(404).send({ status: false, msg: "No such documents found" })
         res.status(200).send({ status: true, data: filter })
