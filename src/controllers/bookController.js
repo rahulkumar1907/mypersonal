@@ -183,13 +183,16 @@ const deleteBook = async function (req, res) {
 
         /******************************Authorization Check*****************************/
         let authCheck = await bookModel.findById(req.params.bookId)
+        if(!authCheck) return res.status(404).send({ status: false, message: "No Document found." })
+
         if (authCheck.userId != req.headers['User-login'])
-            return res.status(401).send({ status: false, msg: "You don't have authority to delete this Book." })
+            return res.status(401).send({ status: false, msg: "You don't have authority to delete this Book."})
+
         /*********************************************************************************/
-        
+    
         let deletedBook = await bookModel.findOneAndUpdate({ _id: req.params.bookId, isDeleted: false }, { isDeleted: true, deletedAt: Date.now() })
         if (!deletedBook)
-            return res.status(404).send({ status: false, msg: "No Document found." })
+            return res.status(404).send({ status: false, message: "No Document found." })
         res.status(200).send({ status: true, message: "Book has been deleted successfully" });
     }
     catch (err) {
