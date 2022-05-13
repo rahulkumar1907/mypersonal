@@ -71,28 +71,31 @@ const updateReview = async function(req, res){
 
     // check reviewedBy
     if(!reviewedBy)  return res.status(400).send({ status: false, message: "Reviewer's name is missing"})
+    if (!data.reviewedBy.match(/^[a-zA-Z,\-.\s]*$/)) return res.status(400).send({ status: false, msg: "enter a valid reviewer's name"})
 
-    const searchBook = await bookModel.findById(bookId)
+    const searchBook = await bookModel.findOne({_id: bookId, isDeleted:false})
 
-    if(!searchBook) return res.status(404).send({ status: false, message: " Book does not exist with this id"})
+    if(!searchBook) return res.status(404).send({ status: false, message: " Book deleted or not exist with this id"})
 
-    const searchReview = await reviewModel.findById(reviewId)
+    const updateReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId, isDeleted:false}, {review: review, rating: rating, reviewedBy: reviewedBy}, {new: true})
 
-    if(!searchReview) return res.status(404).send({ status: false, message: " Review does not exist with this id"})
+    if(!updateReview) return res.status(404).send({ status: false, message: " Review deleted or not exist with this id"})
 
-    if(searchBook.isDeleted == false){
-        if(searchReview.isDeleted == false){
-            const updatedReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId}, {review: review, rating: rating, reviewedBy: reviewedBy}, { new: true })
+    return res.status(200).send({status: true, message: "Books list", data: updateReview})
 
-            return res.status(200).send({status: true, message: "Books list", data: updatedReview})
-        }else {
-            return res.status(400).send({ status: false, message: "Unable to update. Review has been already deleted"})
+    // if(searchBook.isDeleted == false){
+    //     if(searchReview.isDeleted == false){
+    //         const updatedReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId}, {review: review, rating: rating, reviewedBy: reviewedBy}, { new: true })
 
-        } 
-    }else {
-        return res.status(400).send({ status: false, message: "Unable to update. Book already deleted"})
-        
-    }}catch(error) {
+    //         return res.status(200).send({status: true, message: "Books list", data: updatedReview})
+    //     }else {
+    //         return res.status(400).send({ status: false, message: "Unable to update. Review has been already deleted"})
+
+    //     } 
+    // }else {
+    //     return res.status(400).send({ status: false, message: "Unable to update. Book already deleted"})
+    // }   
+    }catch(error) {
     res.status(500).send({ status: false, message: error.message }) 
 
     }
