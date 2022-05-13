@@ -140,23 +140,27 @@ const getBook = async function (req, res) {
 
     //if empty query params then return all deleted false books
     if (arr.length === 0) {
-      let findBook = await bookModel.find({ isDeleted: false }).select({
-        _id: 1,
-        title: 1,
-        excerpt: 1,
-        userId: 1,
-        category: 1,
-        releasedAt: 1,
-        reviews: 1,
-      });
+      let findBook = await bookModel
+        .find({ isDeleted: false })
+        .select({
+          _id: 1,
+          title: 1,
+          excerpt: 1,
+          userId: 1,
+          category: 1,
+          releasedAt: 1,
+          reviews: 1,
+        })
+        .collation({ locale: "en", strength: 2 })
+        .sort({ title: 1 });
 
-      //sorted books in alphabetical order
-      // findBook.sort({ title: -1 });
-      findBook.sort(function (a, b) {
-        var textA = a.title.toUpperCase();
-        var textB = b.title.toUpperCase();
-        return textA < textB ? -1 : textA > textB ? 1 : 0;
-      });
+      // //sorted books in alphabetical order
+      // // findBook.sort({ title: -1 });
+      // findBook.sort(function (a, b) {
+      //   var textA = a.title.toUpperCase();
+      //   var textB = b.title.toUpperCase();
+      //   return textA < textB ? -1 : textA > textB ? 1 : 0;
+      // });
 
       //if no book found
       if (!findBook) {
@@ -201,14 +205,16 @@ const getBook = async function (req, res) {
           category: 1,
           releasedAt: 1,
           reviews: 1,
-        });
+        })
+        .collation({ locale: "en", strength: 2 })
+        .sort({ title: 1 });
 
-      //sorted filter books in alphabetical order
-      filterBook.sort(function (a, b) {
-        var textA = a.title.toUpperCase();
-        var textB = b.title.toUpperCase();
-        return textA < textB ? -1 : textA > textB ? 1 : 0;
-      });
+      // //sorted filter books in alphabetical order
+      // filterBook.sort(function (a, b) {
+      //   var textA = a.title.toUpperCase();
+      //   var textB = b.title.toUpperCase();
+      //   return textA < textB ? -1 : textA > textB ? 1 : 0;
+      // });
 
       //no books with given filter
       if (filterBook.length == 0) {
