@@ -22,7 +22,6 @@ const createReview = async function(req, res){
     if (!checkBookId) return res.status(404).send({status: false, message: "Book doesn't exist"})
 
     // check reviewedBy
-    if(!data.reviewedBy) return res.status(400).send({status: false, message: "Please enter your name"})
     if (data.reviewedBy && !data.reviewedBy.match(/^[a-zA-Z,\-.\s]*$/)) return res.status(400).send({ status: false, msg: "enter a valid name" })
 
     // add reviewed At date.
