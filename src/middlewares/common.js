@@ -1,6 +1,6 @@
 const bookModel = require("../models/bookModel");
 const jwt = require("jsonwebtoken");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const authentication = async function (req, res, next) {
   try {
@@ -29,7 +29,7 @@ const authentication = async function (req, res, next) {
         .status(401)
         .send({ status: false, message: "Authentication failed" });
     }
-    console.log("authentication successful")
+    console.log("authentication successful");
     next();
     // });
   } catch (error) {
@@ -40,33 +40,37 @@ const authentication = async function (req, res, next) {
 //Authorization
 const authorization = async function (req, res, next) {
   try {
-  
     const decodedToken = req.decodedToken;
 
-    let _id = decodedToken.userId;
+    let id = decodedToken.userId;
 
-    const id = req.params.bookId;
-   
-    if (id) {
+    const _id = req.params.bookId;
+
+    if (_id) {
       //id format validation
-      if (id) {
-        if (mongoose.Types.ObjectId.isValid(id) == false) {
+      if (_id) {
+        if (mongoose.Types.ObjectId.isValid(_id) == false) {
           return res
             .status(400)
             .send({ status: false, message: "Invalid bookId" });
         }
       }
-  
 
-      const book = await bookModel.findById({ _id: id });
+      const book = await bookModel.findById({ _id });
+      console.log(book);
 
-      if (book.userId != _id) {
+      //no book found
+      if (!book) {
+        return res.status(404).send({ status: true, data: "book not found" });
+      }
+
+      if (book.userId != id) {
         return res
           .status(401)
           .send({ status: false, message: "Not authorised" });
       }
 
-      console.log("authorization successful")
+      console.log("authorization successful");
 
       next();
     }

@@ -364,11 +364,23 @@ const deleteBook = async function (req, res) {
     const date = new Date().toISOString();
 
     //delete book and log deletion time
-    const deletedBook = await bookModel.findByIdAndUpdate(
-      { _id },
-      { $set: { isDeleted: true, deletedAt: date } },
-      { new: true }
-    );
+    const deletedBook = await bookModel
+      .findByIdAndUpdate(
+        { _id },
+        { $set: { isDeleted: true, deletedAt: date } },
+        { new: true }
+      )
+      .lean();
+
+    const deleteReview = await reviewModel
+      .find({ $and: [{ bookId: _id }, { isDeleted: false }] })
+      .updateMany(
+        { $set: { isDeleted: true, deletedAt: date } },
+        { new: true }
+      );
+
+    deletedBook.reviewsData = deleteReview;
+
     res.status(200).send({ status: true, data: deletedBook });
   } catch (err) {
     res.status(500).send({
