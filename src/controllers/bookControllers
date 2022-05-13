@@ -107,6 +107,15 @@ const createBook = async function (req, res) {
       return res.status(404).send({ status: false, message: `user not found` });
     }
 
+    //create Book authorization
+    const loggedUserId = req.decodedToken.userId;
+    if (loggedUserId != Body.userId) {
+      return res.status(401).send({
+        status: false,
+        message: "Not authorised - use your own UserId",
+      });
+    }
+
     //book created
     let bookCreated = await bookModel.create(Body);
     res

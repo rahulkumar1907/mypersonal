@@ -40,11 +40,11 @@ const createReview = async function (req, res) {
     }
 
     //mandatory fields
-    if (!reviewedBy) {
-      return res
-        .status(400)
-        .send({ status: false, message: "reviewer name is required" });
-    }
+    // if (!reviewedBy) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: false, message: "reviewer name is required" });
+    // }
 
     if (!rating) {
       return res
