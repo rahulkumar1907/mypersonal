@@ -107,26 +107,21 @@ const getBookFromBookId = async function(req, res){
     if(!data) return res.status(400).send({status: false, message: "BookId must be provide"});
     if(!mongoose.isValidObjectId(data)) res.status(400).send({status: false, message: "BookId must be valid"});
 
-    const findBook = await bookModel.findOne({_id: data, isDeleted: false})
 
+    const findBook = await bookModel.findOne({_id: data, isDeleted: false}).lean()
     if(!findBook) return res.status(404).send({status: false, message: "Book not found"});
 
-        const reviewedBook = await reviewModel.find({bookId: data})
-        
-        // let obj = {
-        //     ...findBook
-        // }
+    const reviewedBook = await reviewModel.find({bookId: data, isDeleted:false})
 
-        findBook._doc.reviewsData = reviewedBook
-        
-        return res.status(200).send({status: true, message: 'Book lists', data: findBook})
+    findBook["reviewsData"] = reviewedBook
+
+    return res.status(200).send({status: true, message: 'Book lists', data: findBook})
+
+    
     }
     catch(error){
         res.status(500).send({status: false, message: error.message})
     }
-
-    
-
 
 }
 
@@ -160,7 +155,7 @@ const updateBook = async function (req, res) {
         let checkIsbn = await bookModel.findOne({ ISBN: ISBN });
         if (checkIsbn) return res.status(400).send({ status: false, message: "This ISBN is already exists" });
 
-        //Updat book
+        //Update book
         let updatedbook = await bookModel.findOneAndUpdate({ _id: req.params.bookId, isDeleted: false },
             {
                 title: title,
@@ -183,7 +178,7 @@ const deleteBook = async function (req, res) {
 
         /******************************Authorization Check*****************************/
         let authCheck = await bookModel.findById(req.params.bookId)
-        if(!authCheck) return res.status(404).send({ status: false, message: "No Document found." })
+        if(!authCheck) return res.status(404).send({ status: false, message: "No Document found."})
 
         if (authCheck.userId != req.headers['User-login'])
             return res.status(401).send({ status: false, msg: "You don't have authority to delete this Book."})

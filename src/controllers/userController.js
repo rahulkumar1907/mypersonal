@@ -76,7 +76,7 @@ const loginUser = async function (req, res) {
        {
         userId: checkedUser._id.toString(),
         iat: currTime,
-        exp: 1200 + currTime
+        exp: currTime + 1200
       }, "functionUp"
 
     );
