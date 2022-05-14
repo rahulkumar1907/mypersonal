@@ -61,7 +61,9 @@ const authorization = async function (req, res, next) {
 
       //no book found
       if (!book) {
-        return res.status(404).send({ status: true, data: "book not found" });
+        return res
+          .status(404)
+          .send({ status: false, message: "book not found" });
       }
 
       if (book.userId != id) {
@@ -79,5 +81,4 @@ const authorization = async function (req, res, next) {
   }
 };
 
-module.exports.authentication = authentication;
-module.exports.authorization = authorization;
+module.exports = { authentication, authorization };

@@ -125,7 +125,7 @@ const createBook = async function (req, res) {
     res.status(500).send({
       status: false,
       Error: "Server not responding",
-      msg: err.message,
+      message: err.message,
     });
   }
 };
@@ -261,7 +261,7 @@ const getBookDetails = async function (req, res) {
 
     //no books found
     if (!book) {
-      return res.status(404).send({ status: true, data: "book not found" });
+      return res.status(404).send({ status: false, message: "book not found" });
     }
 
     //fetch reviews of the above book
@@ -277,7 +277,7 @@ const getBookDetails = async function (req, res) {
     res.status(500).send({
       status: false,
       Error: "Server not responding",
-      msg: err.message,
+      message: err.message,
     });
   }
 };
@@ -301,7 +301,7 @@ const updateBook = async function (req, res) {
       $and: [{ _id }, { isDeleted: false }],
     });
     if (!book) {
-      return res.status(404).send({ status: true, data: "book not found" });
+      return res.status(404).send({ status: false, message: "book not found" });
     }
 
     //reading updates
@@ -340,7 +340,7 @@ const updateBook = async function (req, res) {
     res.status(500).send({
       status: false,
       Error: "Server not responding",
-      msg: err.message,
+      message: err.message,
     });
   }
 };
@@ -366,7 +366,7 @@ const deleteBook = async function (req, res) {
 
     //no book found
     if (!book) {
-      return res.status(404).send({ status: true, data: "book not found" });
+      return res.status(404).send({ status: false, message: "book not found" });
     }
 
     //date format
@@ -395,7 +395,7 @@ const deleteBook = async function (req, res) {
     res.status(500).send({
       status: false,
       Error: "Server not responding",
-      msg: err.message,
+      message: err.message,
     });
   }
 };
