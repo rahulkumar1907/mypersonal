@@ -14,7 +14,7 @@ router.post("/login", userControllers.loginUser);
 router.post("/books",middleware.authentication, bookControllers.createBook);
 router.get("/books",middleware.authentication, bookControllers.getBook);
 router.get("/books/:bookId",middleware.authentication, bookControllers.getBookDetails);
-router.put("/books/:bookId",middleware.authentication, bookControllers.updateBook);
+router.put("/books/:bookId",middleware.authentication,middleware.authorization, bookControllers.updateBook);
 router.delete("/books/:bookId",middleware.authentication,middleware.authorization, bookControllers.deleteBook);
 
 //review API's

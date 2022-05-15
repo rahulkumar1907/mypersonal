@@ -60,7 +60,7 @@ const createBook = async function (req, res) {
     if (!dateRgx) {
       return res.status(400).send({
         status: false,
-        message: "Please provide valid date formate YYYY-MM-DD",
+        message: "Please provide valid date in this formate YYYY-MM-DD",
       });
     }
 
@@ -257,7 +257,7 @@ const getBookDetails = async function (req, res) {
       .findOne({
         $and: [{ _id }, { isDeleted: false }],
       })
-      .lean(); //used to lean to unfreeze document received from mongoDB
+      .lean(); //unfreeze document received from mongoDB
 
     //no books found
     if (!book) {
@@ -318,6 +318,14 @@ const updateBook = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: `${title} already exist` });
+    }
+
+    //ISBN format validation
+    const ISBNRgx = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(ISBN);
+    if (!ISBNRgx) {
+      return res
+        .status(400)
+        .send({ status: false, message: "Please provide valid ISBN format" });
     }
 
     const uniqueISBN = await bookModel.findOne({

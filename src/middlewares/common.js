@@ -57,7 +57,6 @@ const authorization = async function (req, res, next) {
       }
 
       const book = await bookModel.findById({ _id });
-      console.log(book);
 
       //no book found
       if (!book) {
