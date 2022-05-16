@@ -20,6 +20,7 @@ let registerUser = async function (req, res) {
       let nameregex = /^[a-zA-Z ]{2,30}$/
       let emailregex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
       let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
+      let passReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/
 
       if(!title) return res.status(400).send({ status: false, message: "Please enter a title"})
       if(!title.match(/^(Miss|Mr|Mrs)$/)) return res.status(400).send({ status: false, message: "enter valid title" })
@@ -40,6 +41,7 @@ let registerUser = async function (req, res) {
         if (!email.match(emailregex)) return res.status(400).send({ status: false, message: "Please enter valid email" })
 
         if (!password) return res.status(400).send({ status: false, message: "please enter password"})
+        if (!password.match(passReg)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters, at least one letter and one number" })
 
       let duplicate = await userModel.findOne({ email: email })
       if (duplicate) {
@@ -62,11 +64,14 @@ const loginUser = async function (req, res) {
     let email = req.body.email;
     let password = req.body.password;
     let emailregex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    let passReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/
 
     if (!keyValid(email)) return res.status(400).send({status:false, messgage:"email is required"})
     if (!email.match(emailregex)) return res.status(400).send({ status: false, message: "Please enter valid email" })
 
     if (!keyValid(password)) return res.status(400).send({status:false, messsge:"password is required"})
+    if (!password.match(passReg)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters, at least one letter and one number" })
+
     
     let checkedUser = await userModel.findOne({ email: email, password: password });
      if (!checkedUser) return res.status(404).send({ status: false, message: "email or password is not correct"});
@@ -81,7 +86,7 @@ const loginUser = async function (req, res) {
 
     );
     res.setHeader("x-api-key", token)
-    return res.status(200).send({ status: true, message: 'Success', Token: token });
+    return res.status(200).send({ status: true, message: 'Success', data:{token: token} });
 
   }
   catch (error) { 
