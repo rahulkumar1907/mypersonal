@@ -48,7 +48,7 @@ const createBooks = async function (req, res) {
 
         //Check ISBN
         if (!ISBN) return res.status(400).send({ status: false, message: "you must give ISBN" });
-        if (!ISBN.trim().match(ISBNregex)) return res.status(400).send({ status: false, message: "please enter valid ISBN of the book" });
+        if (!ISBN.trim().match(ISBNregex)) return res.status(400).send({ status: false, message: "ISBN must contain 10 to 13 digits." });
 
         let checkIsbn = await bookModel.findOne({ ISBN: ISBN });
         if (checkIsbn) return res.status(400).send({ status: false, message: "This ISBN is already exists" });
