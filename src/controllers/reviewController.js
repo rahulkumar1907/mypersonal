@@ -40,7 +40,6 @@ const createReview = async function (req, res) {
     }
 
     //mandatory fields
-    
 
     if (!rating) {
       return res
@@ -85,7 +84,7 @@ const createReview = async function (req, res) {
     updatedBook.reviewsData = review;
 
     res
-      .status(200)
+      .status(201)
       .send({ status: true, message: "Success", data: updatedBook });
   } catch (err) {
     res.status(500).send({
@@ -156,13 +155,15 @@ const updateReview = async function (req, res) {
         .send({ status: false, message: "Please provide input" });
     }
 
-    //rating validation
-    const validRating = /^([1-5]|1[5])$/.test(rating);
-    if (!validRating) {
-      return res.status(400).send({
-        status: false,
-        message: "Invalid rating - rating should be a Number between 1 to 5",
-      });
+    if (rating) {
+      //rating validation
+      const validRating = /^([1-5]|1[5])$/.test(rating);
+      if (!validRating) {
+        return res.status(400).send({
+          status: false,
+          message: "Invalid rating - rating should be a Number between 1 to 5",
+        });
+      }
     }
 
     //date format
