@@ -33,10 +33,13 @@ const createReview = async function(req, res){
     return res.status(400).send({status: false, message: 'Rating should be an Integer & between 1 to 5'})
 
     //In book collection review increased by 1
-    await bookModel.findOneAndUpdate({_id: bookId, isDeleted: false}, {$inc: {reviews: 1}})
+    const updatedBooks = await bookModel.findOneAndUpdate({_id: bookId, isDeleted: false}, {$inc: {reviews: 1}})
 
     let createdReview =await reviewModel.create(data)
-    return res.status(201).send({ status: true, message: 'Success', data: createdReview })
+
+    let {...data2} = updatedBooks
+    data2._doc.reviewsData = createdReview
+    return res.status(201).send({ status: true, message: 'Success', data: data2._doc })
 }
 catch(error){
     res.status(500).send({ status: false, message: error.message }) 
@@ -78,9 +81,12 @@ const updateReview = async function(req, res){
 
     const updateReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId, isDeleted:false}, {review: review, rating: rating, reviewedBy: reviewedBy}, {new: true})
 
+    let {...data3} = searchBook;
+    data3._doc.reviewsData = updateReview
+
     if(!updateReview) return res.status(404).send({ status: false, message: "Review deleted or not exist with this id"})
 
-    return res.status(200).send({status: true, message: "Books list", data: updateReview})
+    return res.status(200).send({status: true, message: "Books list", data: data3._doc})
 
  
     }catch(error) {

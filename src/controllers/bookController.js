@@ -59,6 +59,8 @@ const createBooks = async function (req, res) {
 
         //check subcategory.
         if (!subcategory) return res.status(400).send({ status: false, message: "please give the category of book" });
+        if (!categoryregex.test(subcategory)) return res.status(400).send({ status: false, message: "please enter valid subCategory" });
+
         subcategory = [...new Set(subcategory)]
 
         if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt must be present" });
