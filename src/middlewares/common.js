@@ -16,6 +16,8 @@ const authentication = async function (req, res, next) {
       const decodedToken = jwt.verify(token, "project3-uranium", {
         ignoreExpiration: true,
       });
+      console.log(decodedToken.exp * 1000);
+      console.log(Date.now());
 
       if (Date.now() > decodedToken.exp * 1000) {
         return res
@@ -57,7 +59,6 @@ const authorization = async function (req, res, next) {
       }
 
       const book = await bookModel.findById({ _id });
-      console.log(book);
 
       //no book found
       if (!book) {
