@@ -17,7 +17,7 @@ const authentication = async function (req, res, next) {
         ignoreExpiration: true,
       });
       console.log(decodedToken.exp * 1000);
-      console.log(Date.now());
+      //console.log(Date.now());
 
       if (Date.now() > decodedToken.exp * 1000) {
         return res

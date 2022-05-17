@@ -85,9 +85,7 @@ const createUser = async function (req, res) {
 
     //title enum validation
     if (!["Mr", "Mrs", "Miss"].includes(Body.title)) {
-      return res.status(400).send({
-        status: false,
-        message: "Title Must be of these values [Mr, Mrs, Miss] ",
+      return res.status(400).send({status: false, message: "Title Must be of these values [Mr, Mrs, Miss] ",
       });
     }
 
@@ -160,6 +158,10 @@ const loginUser = async function (req, res) {
     //empty request body
     let Body = req.body;
     let arr = Object.keys(Body);
+    console.log(arr)
+    console.log(Body)
+    console.log(typeof(arr))
+    console.log(typeof(Body))
 
     if (arr.length == 0) {
       return res
