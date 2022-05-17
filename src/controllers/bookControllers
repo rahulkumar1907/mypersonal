@@ -55,7 +55,7 @@ const createBook = async function (req, res) {
 
     //Date format("YYYY-MM-DD") validation
     const dateRgx =
-      /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/.test(
+      /^(18|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/.test(
         Body.releasedAt
       );
     if (!dateRgx) {
@@ -135,7 +135,7 @@ const getBook = async function (req, res) {
   try {
     //reading input
     let query = req.query;
-    let { userId, category, subcategory } = query; //destructring
+    let { userId } = query; //destructring //-------------2 category and subcategory not used
 
     let arr = Object.keys(query); //array of object keys
 
@@ -151,7 +151,8 @@ const getBook = async function (req, res) {
           category: 1,
           releasedAt: 1,
           reviews: 1,
-        }).select({ __v: 0 })
+        })
+        .select({ __v: 0 })
         .collation({ locale: "en", strength: 2 })
         .sort({ title: 1 });
 
@@ -189,7 +190,7 @@ const getBook = async function (req, res) {
             .send({ status: false, message: "userId Invalid" });
         }
       }
-
+      //3 define common variable
       if (userId) {
         if (mongoose.Types.ObjectId.isValid(userId) == false) {
           return res
@@ -197,7 +198,7 @@ const getBook = async function (req, res) {
             .send({ status: false, message: "userId Invalid" });
         }
       }
-
+      //4 what is const
       //fetch filtered books
       const filterBook = await bookModel
         .find({ $and: [{ isDeleted: false }, query] })
@@ -209,7 +210,8 @@ const getBook = async function (req, res) {
           category: 1,
           releasedAt: 1,
           reviews: 1,
-        }).select({ __v: 0 })
+        })
+        .select({ __v: 0 })
         .collation({ locale: "en", strength: 2 })
         .sort({ title: 1 });
 
@@ -238,7 +240,7 @@ const getBook = async function (req, res) {
     });
   }
 };
-
+//and
 const getBookDetails = async function (req, res) {
   try {
     //reading bookid from path

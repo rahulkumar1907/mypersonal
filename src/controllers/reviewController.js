@@ -28,7 +28,7 @@ const createReview = async function (req, res) {
 
     //reading request body
     const body = req.body;
-    const { reviewedAt, reviewedBy, rating } = body;
+    const { rating } = body;
 
     let arr = Object.keys(body);
 
