@@ -2,7 +2,35 @@ const bookModel = require('../models/bookModel')
 const userModel = require('../models/userModel')
 const mongoose = require("mongoose")
 const reviewModel = require('../models/reviewModel')
+const AWS = require("aws-sdk")
 
+AWS.config.update({
+    accessKeyId: "AKIAY3L35MCRUJ6WPO6J",
+    secretAccessKey: "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",
+    region: "ap-south-1"
+  });
+  
+  const uploadFile = async (file) => {
+    return new Promise(function(resolve, reject) {
+      let s3= new AWS.S3({apiVersion: '2006-03-01'}); 
+  
+      let uploadParams = {
+        ACL: "public-read",
+        Bucket: "classroom-training-bucket",
+        Key: "abc/" + file.originalname,
+        Body: file.buffer 
+      }
+  
+      s3.upload(uploadParams, function(err,data){
+        if(err) {
+          console.log(err)
+          return reject({ "error": err })
+        }
+        return resolve(data.Location)
+      })
+    })
+  }
+ 
 
 
 // validation for user sendind empty string
@@ -16,6 +44,7 @@ let keyValid = function (value) {
 const createBooks = async function (req, res) {
     try {
         let data = req.body;
+        let files = req.files
         
         // destructure
         let { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data;
@@ -52,6 +81,19 @@ const createBooks = async function (req, res) {
 
         let checkIsbn = await bookModel.findOne({ ISBN: ISBN });
         if (checkIsbn) return res.status(400).send({ status: false, message: "This ISBN is already exists" });
+        console.log("ok")
+
+       //check for book cover
+        if(files && files.length>0){
+            let uploadedFileURL = await uploadFile( files[0] )
+            // res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
+            data.bookCover = uploadedFileURL
+        }
+        else{
+            res.status(400).send({ msg: "No file found" })
+        }
+        console.log("end")
+    
 
         //check category.
         if (!category) return res.status(400).send({ status: false, message: "please give the category of book" });
@@ -67,8 +109,8 @@ const createBooks = async function (req, res) {
         if (!releasedAt.trim().match(dateRegex)) return res.status(400).send({ status: false, message: "please enter valid date" })
 
         // **********************************************Authorization Check**************************************/
-        if (req.headers['User-login'] !== data.userId)
-            return res.status(400).send({ status: false, message: "you don't have authorised to create books of other's account" })
+        // if (req.headers['User-login'] !== data.userId)
+        //     return res.status(400).send({ status: false, message: "you don't have authorised to create books of other's account" })
         /***********************************************************************************************************/
         //Creating books
         let newBook = await bookModel.create(data);

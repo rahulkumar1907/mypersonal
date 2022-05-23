@@ -13,7 +13,7 @@ router.post("/login", userController.login)
     
 //////////////////// -BOOK APIS- ////////////////
 
-router.post("/books", middleware, bookController.createBooks);
+router.post("/books", bookController.createBooks);
 
 router.get("/books", middleware, bookController.getBooks)
 

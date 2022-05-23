@@ -12,12 +12,13 @@ const bookSchema = new mongoose.Schema(
     excerpt: { type: String, required: true, trim: true},
     userId: { type:ObjectId, ref: "User", required: true, trim: true},
     ISBN: { type: String, required: true, unique: true, trim: true},
+    bookCover:{type:String,required: true},
     category: { type: String, required: true, trim: true},
     subcategory: { type: [String], required: true },
     reviews: { type: Number, default: 0},
     deletedAt: { type: Date },
     isDeleted: { type: Boolean, default: false },
-    releasedAt: { type: Date, required:true, trim: true}
+    releasedAt: { type: Date,trim: true}
     
   },
   { timestamps: true }
