@@ -44,10 +44,10 @@ const createProduct = async (req, res) => {
 
     //changes because it shows cannot read property match when we dont give the field
     if (isFreeShipping) {
-      if (!isFreeShipping.match(/^(True|False|true|false|TRUE|FALSE)$/))
+      if (!(/^(true|false)$/).test(isFreeShipping))
         return res.status(400).send({
           status: false,
-          message: "Freeshipping must be in Boolean (True or false)",
+          message: "Freeshipping must be in Boolean (true or false)",
         })
     }
     if (!availableSizes)
@@ -312,7 +312,8 @@ const updateProduct = async (req, res) => {
 
     //check if isFreeShipping is present or not
     if (data.isFreeShipping || data.isFreeShipping === "") {
-      // if (!isValid(data.isFreeShipping)) return res.status(400).send({ status: false, message: "isFreeShipping cant be empty" })
+      if (!isValid(data.isFreeShipping)) return res.status(400).send({ status: false, message: "isFreeShipping cant be empty" })
+      console.log("ahh")
       if (!data.isFreeShipping.toLowerCase().match(/^(true|false|True|False|TRUE|FALSE)$/))
         return res.status(400).send({
           status: false,
