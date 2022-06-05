@@ -13,7 +13,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "homepage": "https://github.com/Darshit-dev/Project-shoppingCart",
   "dependencies": {
     "aws-sdk": "^2.1141.0",
     "bcrypt": "^5.0.1",
